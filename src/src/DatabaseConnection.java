@@ -2,7 +2,7 @@ package src;
 
 import java.sql.*;
 
-public class SelectApp {
+public class DatabaseConnection {
 
     private static Connection connect(){
 
@@ -10,20 +10,9 @@ public class SelectApp {
         Connection con = null;
         try {
             con = DriverManager.getConnection(url);
-            System.out.println("Conexión establecida");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        /*finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException ex){
-                System.out.println(ex.getMessage());
-            }
-        }*/
-
         return con;
 
     }
@@ -40,6 +29,19 @@ public class SelectApp {
                                     rs.getString("Surname") + "\t" +
                                     rs.getString("Department") + "\t");
             }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void insert(String email) {
+        String sql = "INSERT INTO EMAIL(Mail) VALUES(?)";
+
+        try(Connection con = this.connect();
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            pstmt.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
